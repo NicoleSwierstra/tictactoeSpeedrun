@@ -14,7 +14,7 @@ public class Board {
     final static int[][] GEN = {EASY, NORMAL, EXPERT};
 
     boolean firstMove = false;
-    public int mines, width, height;
+    public int mines, flags, width, height;
     public int[][] board;
     public boolean[][] boardCovered;
     public boolean[][] boardFlagged;
@@ -30,7 +30,6 @@ public class Board {
         boardFlagged = new boolean[height][width];
 
         generateBoard();
-        print();
     }
 
     //places mines
@@ -42,11 +41,22 @@ public class Board {
             int y = r.nextInt(height);
             if (board[y][x] == MINE) {i--; continue;}
             board[y][x] = MINE;
-            System.out.println(x + ", " + y);
         }
+        generateNumbers();
+        coverBoard();
+    }
+
+    void generateNumbers(){
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
-                if (board[y][x] == EMPTY) board[y][x] = findNum(x, y);
+                if (board[y][x] != MINE) board[y][x] = findNum(x, y);
+            }
+        }
+    }
+
+    void coverBoard(){
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
                 boardCovered[y][x] = true;
             }
         }
@@ -81,18 +91,45 @@ public class Board {
     public boolean remove(int x, int y){
         if(boardFlagged[y][x]) return true;
         propagate(x, y);
-        if (board[y][x] == MINE) return false;
-        else return true;
+        if (board[y][x] == MINE) 
+            if(firstMove)
+                return false;
+            else
+                regen(x, y);
+        firstMove = true;
+        return true;
     }
 
     public void flag(int x, int y){
         if (!boardCovered[y][x]) return;
         boardFlagged[y][x] = !boardFlagged[y][x];
+        flags += boardFlagged[y][x] ? 1 : 0;
+    }
+
+    void regen(int x, int y){
+        board[y][x] = 0;
+        if(y != 0){
+            if(x != 0 && board[0][0] != MINE){
+                board[0][0] = MINE;
+            }
+            else if(x != width-1 && board[0][width-1] != MINE){
+                board[0][width-1] = MINE;
+            }
+        }
+        else if(y != height-1){
+            if(x != 0 && board[0][0] != MINE){
+                board[height-1][0] = MINE;
+            }
+            else if(x != width-1 && board[0][width-1] != MINE){
+                board[height-1][width-1] = MINE;
+            }
+        }
+        generateNumbers();
     }
 
     //for propagating the stuff
     void propagate(int x, int y){
-        if(oob(x,y)) return;
+        if(oob(x,y) || boardFlagged[y][x]) return;
         if(!boardCovered[y][x]) return;
         boardCovered[y][x] = false;
         if(board[y][x] == MINE || board[y][x] != EMPTY) return;
@@ -117,7 +154,7 @@ public class Board {
 
     String getC(int x, int y){
         if(boardFlagged[y][x]) return "\033[32;40m" + "F" + "\033[0;0m";
-        if(boardCovered[y][x]) return " ";
+        //if(boardCovered[y][x]) return " ";
         if(board[y][x] == EMPTY) return "􏿾";
         return "" + board[y][x];
     }

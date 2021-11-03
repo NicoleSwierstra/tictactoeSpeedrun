@@ -13,6 +13,8 @@ public class Window {
         private static final long serialVersionUID = 1L;
 
         int panewidth = 720, paneheight = 720;
+        float headerHeight = 0.1f;
+        int headerOffset = (int)(headerHeight * paneheight);
 
         Point mouse_loc;
 
@@ -24,7 +26,8 @@ public class Window {
             JComponent pane = this;
             addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent componentEvent) {
-                    paneheight = pane.getHeight();
+                    headerOffset = (int)(headerHeight * paneheight);
+                    paneheight = pane.getHeight() - headerOffset;
                     panewidth = pane.getWidth();
                     renderer.resize();
                 }
@@ -38,10 +41,14 @@ public class Window {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(new Color(0.05f, 0.04f, 0.1f));
-            g.fillRect(0, 0, panewidth, paneheight);
+            g.fillRect(0, headerOffset, panewidth, paneheight);
+            g.setColor(new Color(0.1f, 0.1f, 0.1f));
+            g.fillRect(0, 0, panewidth, headerOffset);
             Point p = MouseInfo.getPointerInfo().getLocation();
             Point o = this.getLocationOnScreen();
-            renderer.Render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()));
+            renderer.renderHeader(g, headerOffset);
+            g.translate(0, headerOffset);
+            renderer.Render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()) - headerOffset);
         }
 
         public void run() {
@@ -54,7 +61,7 @@ public class Window {
         }
 
         public int shortest(){
-            return Math.min(paneheight, panewidth);
+            return Math.min(paneheight + headerOffset, panewidth);
         }
     }
 
@@ -83,7 +90,7 @@ public class Window {
         g.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                r.onMouse(e.getButton(), e.getX(), e.getY());
+                r.onMouse(e.getButton(), e.getX(), e.getY() - g.headerOffset);
             }
             @Override
             public void mousePressed(MouseEvent e) {}

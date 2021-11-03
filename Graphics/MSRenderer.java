@@ -11,7 +11,7 @@ public class MSRenderer {
     final static Color cole = new Color(  0,   0,   0);
     final static Color col1 = new Color(  0,   0, 255);
     final static Color col2 = new Color(  0, 125,   0);
-    final static Color col3 = new Color(  0, 255,   0);
+    final static Color col3 = new Color(255,   0,   0);
     final static Color col4 = new Color(  0,   0, 125);
     final static Color col5 = new Color(127,   0,   0);
     final static Color col6 = new Color(  0, 127, 127);
@@ -28,6 +28,14 @@ public class MSRenderer {
         board = b;
         panel = gp;
     }
+    
+    void renderHeader(Graphics g, int hHeight){
+        Font font = new Font("Comic Sans MS", Font.BOLD, (int)(hHeight * 0.8f));
+        g.setFont(font);
+        g.setColor(Color.gray);
+        FontMetrics metrics = g.getFontMetrics(font);
+        g.drawString("Mines: " + (board.mines - board.flags), 20, metrics.getAscent());
+    }
 
     void Render(Graphics g, int mousex, int mousey){
         g.setColor(Color.white);
@@ -41,9 +49,9 @@ public class MSRenderer {
     }
 
     void drawCell(Graphics g, int x, int y){
-        g.setFont(new Font("Comic Sans MS", 2, ppixel));
+        Font font = new Font("Comic Sans MS", Font.BOLD, ppixel);
+        g.setFont(font);
         int halfx = x * ppixel + ppixel/4, halfy = y * ppixel + ppixel/4;
-
         if(board.boardCovered[y][x]){
             g.setColor(Color.GRAY);
             g.fillRect(x*ppixel, y*ppixel, ppixel, ppixel);
@@ -57,7 +65,11 @@ public class MSRenderer {
         }
         else if(board.board[y][x] > 0){
             g.setColor(colNum[board.board[y][x]]);
-            g.drawString(""+board.board[y][x], x*ppixel, (y+1)*ppixel);
+            String label = ""+board.board[y][x];
+            FontMetrics metrics = g.getFontMetrics(font);
+            int xloc = x * ppixel + (ppixel - metrics.stringWidth(label)) / 2,
+                yloc = y * ppixel + ((ppixel - metrics.getHeight()) / 2) + metrics.getAscent();
+            g.drawString(label, xloc, yloc);
         }
         return;
     }
