@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.font.*;
 import java.awt.geom.AffineTransform;
 
-class Renderer{
+class TTTRenderer{
     GraphicPanel panel;
     Board board;
     int ppixel;
@@ -18,13 +18,13 @@ class Renderer{
     final static Color xcol = new Color(94, 204, 147);
     final static Color ocol = new Color(195, 86, 209);
 
-    Renderer(Board b, GraphicPanel gp){
+    TTTRenderer(Board b, GraphicPanel gp){
         panel = gp;
         board = b;
         ppixel = panel.shortest()/board.size;
     }
 
-    void render(Graphics g, int xmouse, int ymouse){
+    void Render(Graphics g, int xmouse, int ymouse){
         g.setColor(Color.white);
         drawBoard(g);
         for(int x = 0; x < board.size; x++){

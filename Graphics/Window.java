@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import BasicLogic.*;
-import BasicLogic.tictactoe.Board;
+import BasicLogic.Minesweeper.Board;
 
 public class Window {
     public class GraphicPanel extends JComponent implements Runnable {
@@ -16,9 +16,9 @@ public class Window {
 
         Point mouse_loc;
 
-        Renderer renderer;
+        MSRenderer renderer;
 
-        GraphicPanel(Renderer r) {
+        GraphicPanel(MSRenderer r) {
             renderer = r;
             setPreferredSize(new Dimension(panewidth, paneheight));
             JComponent pane = this;
@@ -41,7 +41,7 @@ public class Window {
             g.fillRect(0, 0, panewidth, paneheight);
             Point p = MouseInfo.getPointerInfo().getLocation();
             Point o = this.getLocationOnScreen();
-            renderer.render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()));
+            renderer.Render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()));
         }
 
         public void run() {
@@ -60,13 +60,13 @@ public class Window {
 
     JFrame mainwindow;
     GraphicPanel g;
-    Renderer r;
+    MSRenderer r;
 
     public Window(Board b){
         mainwindow = new JFrame("Poker");
         mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         g = new GraphicPanel(r);
-        r = new Renderer(b, g);
+        r = new MSRenderer(b, g);
         g.renderer = r;
         setupInput();
         mainwindow.add(g);
@@ -83,7 +83,7 @@ public class Window {
         g.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                r.onMouse(e.getX(), e.getY());
+                r.onMouse(e.getButton(), e.getX(), e.getY());
             }
             @Override
             public void mousePressed(MouseEvent e) {}

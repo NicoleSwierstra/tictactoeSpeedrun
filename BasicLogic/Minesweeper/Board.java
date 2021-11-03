@@ -5,19 +5,19 @@ import java.util.Random;
 
 public class Board {
     final static int EMPTY = 0;
-    final static int MINE = 9;
+    public final static int MINE = 9;
 
     //width, height, mines
     final static int[] EASY   = {  9,  9, 10 };
     final static int[] NORMAL = { 15, 13, 40 };
-    final static int[] EXPERT = { 30, 16, 99 }; 
+    final static int[] EXPERT = { 30, 25, 99 }; 
     final static int[][] GEN = {EASY, NORMAL, EXPERT};
 
     boolean firstMove = false;
-    int mines, width, height;
-    int[][] board;
-    boolean[][] boardCovered;
-    boolean[][] boardFlagged;
+    public int mines, width, height;
+    public int[][] board;
+    public boolean[][] boardCovered;
+    public boolean[][] boardFlagged;
     
 
     public Board(int type){
@@ -78,11 +78,16 @@ public class Board {
     }
 
     //returns true if not a mine
-    boolean remove(int x, int y){
+    public boolean remove(int x, int y){
         if(boardFlagged[y][x]) return true;
         propagate(x, y);
         if (board[y][x] == MINE) return false;
         else return true;
+    }
+
+    public void flag(int x, int y){
+        if (!boardCovered[y][x]) return;
+        boardFlagged[y][x] = !boardFlagged[y][x];
     }
 
     //for propagating the stuff
@@ -99,10 +104,6 @@ public class Board {
         propagate(x-1, y+1);
         propagate(  x, y+1);
         propagate(x+1, y+1);
-    }
-
-    void flag(int x, int y){
-        boardFlagged[y][x] = !boardFlagged[y][x];
     }
 
     public void print(){
@@ -122,7 +123,7 @@ public class Board {
     }
 
     //if the x, y board coordinates are out of bounds
-    boolean oob(int x, int y){
+    public boolean oob(int x, int y){
         return x < 0 || y < 0 || x >= width || y >= height;
     }
 }
