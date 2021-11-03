@@ -1,6 +1,7 @@
 package Graphics;
 
 import BasicLogic.*;
+import BasicLogic.tictactoe.Board;
 import Graphics.Window.GraphicPanel;
 
 import java.awt.*;

@@ -1,5 +1,4 @@
-package BasicLogic;
-import java.util.*;
+package BasicLogic.tictactoe;
 
 public class Board{
     // y, x

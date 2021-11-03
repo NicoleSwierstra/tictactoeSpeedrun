@@ -1,9 +1,9 @@
-import BasicLogic.Board;
-import BasicLogic.Game;
+import BasicLogic.tictactoe.Board;
 import Graphics.Window;
 
 public class Main {
     public static void main(String[] args){
-        new Window(new Board(3));
+        //new Window(new Board(3));
+        new BasicLogic.Minesweeper.Game(1);
     }
 }

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import BasicLogic.*;
+import BasicLogic.tictactoe.Board;
 
 public class Window {
     public class GraphicPanel extends JComponent implements Runnable {
