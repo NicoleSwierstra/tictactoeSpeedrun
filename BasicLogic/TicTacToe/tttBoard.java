@@ -77,7 +77,7 @@ public class tttBoard{
         switch(i){
             case 0: return ' ';
             case 1: return 'X';
-            case 2: return 'Y';
+            case 2: return 'O';
         }
         return ' ';
     }

@@ -1,7 +1,6 @@
 package Graphics;
 
 import java.awt.*;
-import java.awt.font.*;
 import java.awt.event.*;
 
 import BasicLogic.Minesweeper.msBoard;

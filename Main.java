@@ -21,12 +21,12 @@ public class Main {
                     type = 1;
                 }
                 else if (in.contains("ms")){
-                    type = 3;
+                    type = 2;
                 }
             }
             else if (in.contains("gui")){
                 if(in.contains("ttt")){
-                    type = 2;
+                    type = 3;
                 }
                 else if (in.contains("ms")){
                     type = 4;
@@ -34,11 +34,12 @@ public class Main {
             }
             arg = Integer.parseInt(in.split(" ")[2]);
         } while(type == 0);
+        sc.close();
         switch(type){
-            case 1: new BasicLogic.TicTacToe.tttBoard(arg);
-            case 2: new BasicLogic.Minesweeper.msBoard(arg);
-            case 3: new Window(1, arg);
-            case 4: new Window(2, arg);
+            case 1: new BasicLogic.TicTacToe.tttGame(arg); break;
+            case 2: new BasicLogic.Minesweeper.msGame(arg); break;
+            case 3: new Window(1, arg); break;
+            case 4: new Window(2, arg); break;
         }
     }
 }
