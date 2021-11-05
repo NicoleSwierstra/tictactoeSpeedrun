@@ -4,10 +4,10 @@ import java.awt.*;
 import java.awt.font.*;
 import java.awt.event.*;
 
-import BasicLogic.Minesweeper.Board;
+import BasicLogic.Minesweeper.msBoard;
 import Graphics.Window.GraphicPanel;
 
-public class MSRenderer {
+public class MSRenderer implements Renderer{
     final static Color cole = new Color(  0,   0,   0);
     final static Color col1 = new Color(  0,   0, 255);
     final static Color col2 = new Color(  0, 125,   0);
@@ -21,23 +21,34 @@ public class MSRenderer {
 
     int ppixel=0;
     boolean won = false, lost = false;
-    Board board;
+    final static float headerHeight = 0.1f;
+    msBoard board;
     GraphicPanel panel;
 
-    public MSRenderer(Board b, GraphicPanel gp){
+    public MSRenderer(msBoard b, GraphicPanel gp){
         board = b;
         panel = gp;
     }
+
+    public void reset(){
+        won = false; lost = false;
+        board.reset();
+    }
     
     void renderHeader(Graphics g, int hHeight){
+        g.setColor(new Color(0.1f, 0.1f, 0.1f));
+        g.fillRect(0, 0, panel.panewidth, hHeight);
         Font font = new Font("Comic Sans MS", Font.BOLD, (int)(hHeight * 0.8f));
         g.setFont(font);
         g.setColor(Color.gray);
         FontMetrics metrics = g.getFontMetrics(font);
         g.drawString("Mines: " + (board.mines - board.flags), 20, metrics.getAscent());
+        g.drawString(won ? "YOU WIN!" : (lost ? "YOU LOSE!" : ""), hHeight * 5, metrics.getAscent());
     }
 
-    void Render(Graphics g, int mousex, int mousey){
+    public void Render(Graphics g, int mousex, int mousey){
+        renderHeader(g, (int)(headerHeight * panel.paneheight));
+        g.translate(0, (int)(headerHeight * panel.paneheight));
         g.setColor(Color.white);
         drawBoard(g);
         for(int y = 0; y < board.height; y++){
@@ -59,7 +70,7 @@ public class MSRenderer {
                 g.setColor(Color.GREEN);
                 g.fillRect(halfx, halfy, ppixel/2, ppixel/2);
         }   
-        else if(board.board[y][x] == Board.MINE){
+        else if(board.board[y][x] == msBoard.MINE){
             g.setColor(Color.RED);
             g.fillOval(halfx, halfy, ppixel/2, ppixel/2);
         }
@@ -87,16 +98,17 @@ public class MSRenderer {
         g.fillRect(xx*ppixel, yy*ppixel, ppixel, ppixel);
     }
 
-    void resize(){
+    public void resize(){
         ppixel = Math.min(panel.panewidth/board.width, panel.paneheight/board.height);
     }
 
-    void onMouse(int click, int x, int y){
+    public void onMouse(int click, int x, int y){
         int xx = x / ppixel, yy = y / ppixel;
         if(won || lost || board.oob(xx, yy)) return;
         if(click == MouseEvent.BUTTON1)
             lost = !board.remove(xx, yy);
         else
             board.flag(xx, yy);
+        if(board.checkWin()) won = true;
     }
 }

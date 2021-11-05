@@ -1,11 +1,12 @@
 package Graphics;
 
 import javax.swing.*;
+
+import BasicLogic.TicTacToe.tttBoard;
+import BasicLogic.Minesweeper.msBoard;
+
 import java.awt.*;
 import java.awt.event.*;
-
-import BasicLogic.*;
-import BasicLogic.Minesweeper.Board;
 
 public class Window {
     public class GraphicPanel extends JComponent implements Runnable {
@@ -13,42 +14,34 @@ public class Window {
         private static final long serialVersionUID = 1L;
 
         int panewidth = 720, paneheight = 720;
-        float headerHeight = 0.1f;
-        int headerOffset = (int)(headerHeight * paneheight);
 
         Point mouse_loc;
 
-        MSRenderer renderer;
+        Renderer renderer;
 
-        GraphicPanel(MSRenderer r) {
-            renderer = r;
+        GraphicPanel() {
             setPreferredSize(new Dimension(panewidth, paneheight));
             JComponent pane = this;
             addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent componentEvent) {
-                    headerOffset = (int)(headerHeight * paneheight);
-                    paneheight = pane.getHeight() - headerOffset;
+                    paneheight = pane.getHeight();
                     panewidth = pane.getWidth();
                     renderer.resize();
                 }
             });
             setFocusTraversalKeysEnabled(false);
             setFocusable(true);
-            //new Thread(this).run();
         }
 
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(new Color(0.05f, 0.04f, 0.1f));
-            g.fillRect(0, headerOffset, panewidth, paneheight);
-            g.setColor(new Color(0.1f, 0.1f, 0.1f));
-            g.fillRect(0, 0, panewidth, headerOffset);
+            g.fillRect(0, 0, panewidth, paneheight);
             Point p = MouseInfo.getPointerInfo().getLocation();
             Point o = this.getLocationOnScreen();
-            renderer.renderHeader(g, headerOffset);
-            g.translate(0, headerOffset);
-            renderer.Render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()) - headerOffset);
+            
+            renderer.Render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()));
         }
 
         public void run() {
@@ -61,19 +54,21 @@ public class Window {
         }
 
         public int shortest(){
-            return Math.min(paneheight + headerOffset, panewidth);
+            return Math.min(paneheight, panewidth);
         }
     }
 
     JFrame mainwindow;
     GraphicPanel g;
-    MSRenderer r;
+    Renderer r;
 
-    public Window(Board b){
+    public Window(int type, int arg){
         mainwindow = new JFrame("Poker");
         mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        g = new GraphicPanel(r);
-        r = new MSRenderer(b, g);
+        g = new GraphicPanel();
+        r = type == 1 ?
+            new TTTRenderer(new tttBoard(arg), g) :
+            new MSRenderer(new msBoard(arg), g);
         g.renderer = r;
         setupInput();
         mainwindow.add(g);
@@ -90,7 +85,7 @@ public class Window {
         g.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                r.onMouse(e.getButton(), e.getX(), e.getY() - g.headerOffset);
+                r.onMouse(e.getButton(), e.getX(), e.getY());
             }
             @Override
             public void mousePressed(MouseEvent e) {}
@@ -100,6 +95,16 @@ public class Window {
             public void mouseEntered(MouseEvent e) {}
             @Override
             public void mouseExited(MouseEvent e) {}
+        });
+        g.addKeyListener(new KeyListener(){
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(e.getKeyChar() == 'r'){
+                    r.reset();
+                }
+            }
+            @Override public void keyPressed(KeyEvent e) {}
+            @Override public void keyReleased(KeyEvent e) {}
         });
     }
 }

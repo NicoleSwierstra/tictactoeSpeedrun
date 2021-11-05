@@ -1,16 +1,15 @@
 package BasicLogic.Minesweeper;
 
-import java.util.Arrays;
 import java.util.Random;
 
-public class Board {
+public class msBoard {
     final static int EMPTY = 0;
     public final static int MINE = 9;
 
     //width, height, mines
     final static int[] EASY   = {  9,  9, 10 };
     final static int[] NORMAL = { 15, 13, 40 };
-    final static int[] EXPERT = { 30, 25, 99 }; 
+    final static int[] EXPERT = { 24, 20, 99 }; 
     final static int[][] GEN = {EASY, NORMAL, EXPERT};
 
     boolean firstMove = false;
@@ -18,18 +17,24 @@ public class Board {
     public int[][] board;
     public boolean[][] boardCovered;
     public boolean[][] boardFlagged;
-    
+    private int _count_win;
 
-    public Board(int type){
+    public msBoard(int type){
         width = GEN[type][0];
         height = GEN[type][1];
         mines = GEN[type][2];
 
+        reset();
+    }
+
+    public void reset(){
+        firstMove = false;
+        flags = 0;
         board = new int[height][width];
         boardCovered = new boolean[height][width];
         boardFlagged = new boolean[height][width];
-
         generateBoard();
+        _count_win = mines;
     }
 
     //places mines
@@ -102,8 +107,10 @@ public class Board {
 
     public void flag(int x, int y){
         if (!boardCovered[y][x]) return;
+        int df = boardFlagged[y][x] ? 1 : -1;
         boardFlagged[y][x] = !boardFlagged[y][x];
-        flags += boardFlagged[y][x] ? 1 : 0;
+        flags -= df;
+        if (board[y][x] == MINE) _count_win += df;
     }
 
     void regen(int x, int y){
@@ -157,6 +164,10 @@ public class Board {
         //if(boardCovered[y][x]) return " ";
         if(board[y][x] == EMPTY) return "􏿾";
         return "" + board[y][x];
+    }
+
+    public boolean checkWin(){
+        return _count_win == 0;
     }
 
     //if the x, y board coordinates are out of bounds

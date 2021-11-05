@@ -2,9 +2,9 @@ package BasicLogic.Minesweeper;
 
 import BasicLogic.Input;
 
-public class Game {
-    public Game(int type){
-        Board b = new Board(type);
+public class msGame {
+    public msGame(int type){
+        msBoard b = new msBoard(type);
         boolean playing = true;
         //game loop
         while (playing){

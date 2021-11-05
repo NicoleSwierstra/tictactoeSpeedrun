@@ -1,16 +1,17 @@
 package Graphics;
 
-import BasicLogic.*;
-import BasicLogic.tictactoe.Board;
 import Graphics.Window.GraphicPanel;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.font.*;
 import java.awt.geom.AffineTransform;
 
-class TTTRenderer{
+import BasicLogic.TicTacToe.tttBoard;
+
+class TTTRenderer implements Renderer{
     GraphicPanel panel;
-    Board board;
+    tttBoard board;
     int ppixel;
     boolean turn = false;
     int winner = 0;
@@ -18,13 +19,13 @@ class TTTRenderer{
     final static Color xcol = new Color(94, 204, 147);
     final static Color ocol = new Color(195, 86, 209);
 
-    TTTRenderer(Board b, GraphicPanel gp){
+    TTTRenderer(tttBoard b, GraphicPanel gp){
         panel = gp;
         board = b;
         ppixel = panel.shortest()/board.size;
     }
 
-    void Render(Graphics g, int xmouse, int ymouse){
+    public void Render(Graphics g, int xmouse, int ymouse){
         g.setColor(Color.white);
         drawBoard(g);
         for(int x = 0; x < board.size; x++){
@@ -90,11 +91,12 @@ class TTTRenderer{
         ((Graphics2D)g).draw(shape);
     }
 
-    void resize(){
+    public void resize(){
         ppixel = panel.shortest()/board.size;
     }
 
-    void onMouse(int x, int y){
+    public void onMouse(int button, int x, int y){
+        if(button != MouseEvent.BUTTON1) return;
         int xx = x / ppixel, yy = y / ppixel;
         if(winner != 0 || oob(xx, yy)) return;
         if(board.takeTurn(xx, yy, turn?2:1)) turn = !turn;
@@ -103,6 +105,12 @@ class TTTRenderer{
 
     void checkWin(){
         winner = board.checkWin();
+    }
+
+    public void reset(){
+        turn = false;
+        winner = 0;
+        board.clearBoard();
     }
 
     //if the x, y board coordinates are out of bounds

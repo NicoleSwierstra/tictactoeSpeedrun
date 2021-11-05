@@ -1,16 +1,16 @@
-package BasicLogic.tictactoe;
+package BasicLogic.TicTacToe;
 
-public class Board{
+public class tttBoard{
     // y, x
     public int[][] board;
     public int size;
 
-    public Board(int size){
+    public tttBoard(int size){
         this.size = size;
         board = new int[size][size];
     }
 
-    void clearBoard(){
+    public void clearBoard(){
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
                 board[i][j] = 0;

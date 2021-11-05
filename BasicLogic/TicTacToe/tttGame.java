@@ -1,13 +1,13 @@
-package BasicLogic.tictactoe;
+package BasicLogic.TicTacToe;
 
 import BasicLogic.Input;
 
-public class Game {
+public class tttGame {
     boolean turn;
-    Board board;
+    tttBoard board;
 
-    public Game(int size){
-        board = new Board(size);
+    public tttGame(int size){
+        board = new tttBoard(size);
         game();
     }
 
