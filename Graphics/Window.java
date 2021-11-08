@@ -3,6 +3,8 @@ package Graphics;
 import javax.swing.*;
 
 import BasicLogic.TicTacToe.tttBoard;
+import Graphics.Renderers.*;
+import Graphics.Renderers.Renderer;
 import BasicLogic.Hexes.hexesBoard;
 import BasicLogic.Minesweeper.msBoard;
 
@@ -14,7 +16,9 @@ public class Window {
 
         private static final long serialVersionUID = 1L;
 
-        int panewidth = 720, paneheight = 720;
+        public int panewidth = 720;
+
+        public int paneheight = 720;
 
         Point mouse_loc;
 
@@ -68,9 +72,9 @@ public class Window {
         mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         g = new GraphicPanel();
         switch(type){
-            case 1: r = new TTTRenderer(new tttBoard(arg), g);
-            case 2: r = new MSRenderer(new msBoard(arg), g);
-            case 3: r = new HexRenderer(new hexesBoard(arg), g);
+            case 1: r = new TTTRenderer(new tttBoard(arg), g); break;
+            case 2: r = new MSRenderer(new msBoard(arg), g); break;
+            case 3: r = new HexRenderer(new hexesBoard(arg), g); break;
         }
         g.renderer = r;
         setupInput();

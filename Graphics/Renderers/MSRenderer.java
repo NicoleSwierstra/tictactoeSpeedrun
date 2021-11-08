@@ -1,9 +1,10 @@
-package Graphics;
+package Graphics.Renderers;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import BasicLogic.Minesweeper.msBoard;
+import Graphics.Window;
 import Graphics.Window.GraphicPanel;
 
 public class MSRenderer implements Renderer{

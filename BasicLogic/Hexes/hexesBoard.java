@@ -164,9 +164,9 @@ public class hexesBoard {
             System.out.println(type + " angle:" + i + ", (" + q + "," + r + "), (" + dq + "," + dr + ")");
             if(oob(dq, dr)) continue;
             int t = board[dq][dr] - 1;
-            System.out.println(t + ", " + oob(dq, dr));
+            System.out.println("type: " + t);
             if(t == -1) return true;
-            if ((dq != lastMoves[t][0] || dr != lastMoves[t][0]) && t != type) return true;
+            if ((dq != lastMoves[t][0] || dr != lastMoves[t][1]) && t != type) return true;
         }
         return false;
     }

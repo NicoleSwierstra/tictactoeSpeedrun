@@ -1,10 +1,12 @@
-package Graphics;
+package Graphics.Renderers;
 
 import java.awt.*;
 import BasicLogic.Hexes.*;
 import java.awt.event.MouseEvent;
 import java.awt.font.*;
 import java.awt.geom.AffineTransform;
+
+import Graphics.Window;
 import Graphics.Window.GraphicPanel;
 
 public class HexRenderer implements Renderer {
@@ -31,7 +33,7 @@ public class HexRenderer implements Renderer {
     int spixel;
     int winner = 0;
 
-    HexRenderer(hexesBoard b, GraphicPanel g){
+    public HexRenderer(hexesBoard b, GraphicPanel g){
         panel = g;
         board = b;
     }
@@ -63,7 +65,7 @@ public class HexRenderer implements Renderer {
         }
         for(int i = 0; i < board.lastMoves.length; i++){
             Color c = board.playing[i] ? board.turn == i ? Color.white : COLLUT[i+1].darker().darker() : Color.black;
-            renderHexagon((Graphics2D)g, BOARDOUT, c, board.lastMoves[i][0], board.lastMoves[i][1], 0.5f, board.turn == i);
+            renderHexagon((Graphics2D)g, NONCOLOR, c, board.lastMoves[i][0], board.lastMoves[i][1], 0.5f, board.turn == i);
         }
     }
 

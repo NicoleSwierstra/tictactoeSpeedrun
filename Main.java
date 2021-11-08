@@ -4,6 +4,6 @@ import Graphics.Window;
 public class Main {
     public static void main(String[] args){
         //GameBoot.boot();
-        new Window(3, 3);
+        new Window(1, 4);
     }
 }

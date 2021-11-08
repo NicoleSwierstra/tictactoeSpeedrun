@@ -1,4 +1,4 @@
-package Graphics;
+package Graphics.Renderers;
 
 import java.awt.*;
 

@@ -1,5 +1,6 @@
-package Graphics;
+package Graphics.Renderers;
 
+import Graphics.Window;
 import Graphics.Window.GraphicPanel;
 
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.geom.AffineTransform;
 
 import BasicLogic.TicTacToe.tttBoard;
 
-class TTTRenderer implements Renderer{
+public class TTTRenderer implements Renderer{
     GraphicPanel panel;
     tttBoard board;
     int ppixel;
@@ -19,7 +20,7 @@ class TTTRenderer implements Renderer{
     final static Color xcol = new Color(94, 204, 147);
     final static Color ocol = new Color(195, 86, 209);
 
-    TTTRenderer(tttBoard b, GraphicPanel gp){
+    public TTTRenderer(tttBoard b, GraphicPanel gp){
         panel = gp;
         board = b;
         ppixel = panel.shortest()/board.size;
