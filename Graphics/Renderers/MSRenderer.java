@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import BasicLogic.Minesweeper.msBoard;
-import Graphics.Window;
 import Graphics.Window.GraphicPanel;
 
 public class MSRenderer implements Renderer{
@@ -29,6 +28,7 @@ public class MSRenderer implements Renderer{
     public MSRenderer(msBoard b, GraphicPanel gp){
         board = b;
         panel = gp;
+        resize();
     }
 
     public void reset(){

@@ -1,6 +1,5 @@
 package Graphics.Renderers;
 
-import Graphics.Window;
 import Graphics.Window.GraphicPanel;
 
 import java.awt.*;

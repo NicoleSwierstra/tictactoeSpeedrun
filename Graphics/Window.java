@@ -65,17 +65,14 @@ public class Window {
 
     JFrame mainwindow;
     GraphicPanel g;
+    Thread renderThread;
     Renderer r;
 
-    public Window(int type, int arg){
+    public Window(){
         mainwindow = new JFrame("Poker");
         mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         g = new GraphicPanel();
-        switch(type){
-            case 1: r = new TTTRenderer(new tttBoard(arg), g); break;
-            case 2: r = new MSRenderer(new msBoard(arg), g); break;
-            case 3: r = new HexRenderer(new hexesBoard(arg), g); break;
-        }
+        r = new MainMenu(g, this);
         g.renderer = r;
         setupInput();
         mainwindow.add(g);
@@ -85,7 +82,7 @@ public class Window {
     }
 
     void start(){
-        g.run();
+        new Thread(g).start();
     }
 
     void setupInput(){
@@ -103,15 +100,25 @@ public class Window {
             @Override
             public void mouseExited(MouseEvent e) {}
         });
+        Window w = this;
         g.addKeyListener(new KeyListener(){
             @Override
             public void keyTyped(KeyEvent e) {
                 if(e.getKeyChar() == 'r'){
                     r.reset();
                 }
+                else if(e.getKeyChar() == 'm'){
+                    setScene(new MainMenu(g, w));
+                }
             }
+            
             @Override public void keyPressed(KeyEvent e) {}
             @Override public void keyReleased(KeyEvent e) {}
         });
+    }
+
+    void setScene(Renderer renderer){
+        r = renderer;
+        g.renderer = r;
     }
 }
