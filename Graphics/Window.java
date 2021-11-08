@@ -3,6 +3,7 @@ package Graphics;
 import javax.swing.*;
 
 import BasicLogic.TicTacToe.tttBoard;
+import BasicLogic.Hexes.hexesBoard;
 import BasicLogic.Minesweeper.msBoard;
 
 import java.awt.*;
@@ -66,9 +67,11 @@ public class Window {
         mainwindow = new JFrame("Poker");
         mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         g = new GraphicPanel();
-        r = type == 1 ?
-            new TTTRenderer(new tttBoard(arg), g) :
-            new MSRenderer(new msBoard(arg), g);
+        switch(type){
+            case 1: r = new TTTRenderer(new tttBoard(arg), g);
+            case 2: r = new MSRenderer(new msBoard(arg), g);
+            case 3: r = new HexRenderer(new hexesBoard(arg), g);
+        }
         g.renderer = r;
         setupInput();
         mainwindow.add(g);

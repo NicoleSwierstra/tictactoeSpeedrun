@@ -21,6 +21,7 @@ public class MSRenderer implements Renderer{
     int ppixel=0;
     boolean won = false, lost = false;
     final static float headerHeight = 0.1f;
+
     msBoard board;
     GraphicPanel panel;
 
@@ -32,6 +33,10 @@ public class MSRenderer implements Renderer{
     public void reset(){
         won = false; lost = false;
         board.reset();
+    }
+
+    int getHeaderHeight(){
+        return (int)(headerHeight * panel.paneheight);
     }
     
     void renderHeader(Graphics g, int hHeight){
@@ -46,8 +51,8 @@ public class MSRenderer implements Renderer{
     }
 
     public void Render(Graphics g, int mousex, int mousey){
-        renderHeader(g, (int)(headerHeight * panel.paneheight));
-        g.translate(0, (int)(headerHeight * panel.paneheight));
+        renderHeader(g, getHeaderHeight());
+        g.translate(0, getHeaderHeight());
         g.setColor(Color.white);
         drawBoard(g);
         for(int y = 0; y < board.height; y++){
@@ -93,7 +98,7 @@ public class MSRenderer implements Renderer{
 
     void drawGhost(Graphics g, int x, int y){
         g.setColor(new Color(255, 0, 0, 100));
-        int xx = x / ppixel, yy = y / ppixel;
+        int xx = x / ppixel, yy = (y - getHeaderHeight()) / ppixel;
         g.fillRect(xx*ppixel, yy*ppixel, ppixel, ppixel);
     }
 
@@ -102,7 +107,7 @@ public class MSRenderer implements Renderer{
     }
 
     public void onMouse(int click, int x, int y){
-        int xx = x / ppixel, yy = y / ppixel;
+        int xx = x / ppixel, yy = (y - getHeaderHeight()) / ppixel;
         if(won || lost || board.oob(xx, yy)) return;
         if(click == MouseEvent.BUTTON1)
             lost = !board.remove(xx, yy);
