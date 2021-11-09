@@ -28,7 +28,6 @@ public class MSRenderer implements Renderer{
     public MSRenderer(msBoard b, GraphicPanel gp){
         board = b;
         panel = gp;
-        resize();
     }
 
     public void reset(){

@@ -36,7 +36,6 @@ public class HexRenderer implements Renderer {
     public HexRenderer(hexesBoard b, GraphicPanel g){
         panel = g;
         board = b;
-        resize();
     }
 
     public void Render(Graphics g, int xmouse, int ymouse) {

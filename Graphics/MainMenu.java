@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import BasicLogic.Hexes.hexesBoard;
 import BasicLogic.Minesweeper.msBoard;
+import BasicLogic.Tetris.tetrisBoard;
 import BasicLogic.TicTacToe.tttBoard;
 import Graphics.Renderers.Renderer;
 import Graphics.Renderers.*;
@@ -26,11 +27,11 @@ public class MainMenu implements Renderer {
             images[0] = ImageIO.read(new File("res/MenuImages/TicTacToeBW.png"));
             images[1] = ImageIO.read(new File("res/MenuImages/MineSweeperBW.png"));
             images[2] = ImageIO.read(new File("res/MenuImages/HexesBW.png"));
-            //images[3] = ImageIO.read(new File("res/MenuImages/TetrisBW.png"));
+            images[3] = ImageIO.read(new File("res/MenuImages/TetrisBW.png"));
             images[4] = ImageIO.read(new File("res/MenuImages/TicTacToe.png"));
             images[5] = ImageIO.read(new File("res/MenuImages/MineSweeper.png"));
             images[6] = ImageIO.read(new File("res/MenuImages/Hexes.png"));
-            //images[7] = ImageIO.read(new File("res/MenuImages/Tetris.png"));
+            images[7] = ImageIO.read(new File("res/MenuImages/Tetris.png"));
         } catch (IOException e){}
         win = w;
         panel = gp;
@@ -43,6 +44,7 @@ public class MainMenu implements Renderer {
         g.drawImage(getSized(images[0 + (quadrant == 1 ? 4 : 0)], hw, hh), hw, hh, null);
         g.drawImage(getSized(images[1 + (quadrant == 2 ? 4 : 0)], hw, hh),  0, hh, null);
         g.drawImage(getSized(images[2 + (quadrant == 3 ? 4 : 0)], hw, hh),  0,  0, null);
+        g.drawImage(getSized(images[3 + (quadrant == 4 ? 4 : 0)], hw, hh), hw,  0, null);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class MainMenu implements Renderer {
             case 1: win.setScene(new TTTRenderer(new tttBoard(3), panel)); break;
             case 2: win.setScene(new MSRenderer(new msBoard(2), panel)); break;
             case 3: win.setScene(new HexRenderer(new hexesBoard(2), panel)); break;
-            case 4: /* TODO: TETRIS */ break;
+            case 4: win.setScene(new TetrisRenderer(new tetrisBoard(), panel)); break;
         }
     }
 
@@ -92,13 +94,12 @@ public class MainMenu implements Renderer {
         int sw = source.getWidth(), sh = source.getHeight();
         float saspect = (float)sw/(float)sh;
         float daspect = (float)width/(float)height;
-        float sinva = (float)sh/(float)sw;
-        float dinva = (float)height/(float)width;
-        int sx1 = ((saspect - daspect) < 0) ? 0 : (int)Math.round(((saspect - daspect)/2.0f) * sw),
+        int sx1 = (saspect < daspect) ? 0 : (int)Math.round(((((float)height/sh) * sw) - width) * 0.5f),
             sx2 = sw - sx1,
-            sy1 = ((saspect - daspect) > 0) ? 0 : (int)Math.round(((sinva - dinva)/2.0f) * sh),
+            sy1 = (saspect > daspect) ? 0 : (int)Math.round(((((float)width/sw) * sh) - height) * 0.5f),
             sy2 = sh - sy1;
         bi.getGraphics().drawImage(source, 0, 0, width, height, sx1, sy1, sx2, sy2, null);
+        //System.out.println(sx1 + ", " + sy1 + ", " + sx2 + ", " + sy2);
         return bi;
     }
 }

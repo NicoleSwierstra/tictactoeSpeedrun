@@ -22,7 +22,6 @@ public class TTTRenderer implements Renderer{
     public TTTRenderer(tttBoard b, GraphicPanel gp){
         panel = gp;
         board = b;
-        ppixel = panel.shortest()/board.size;
     }
 
     public void Render(Graphics g, int xmouse, int ymouse){

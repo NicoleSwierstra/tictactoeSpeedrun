@@ -69,7 +69,7 @@ public class Window {
     Renderer r;
 
     public Window(){
-        mainwindow = new JFrame("Poker");
+        mainwindow = new JFrame("MINIGAME EXTRAVAGANZA");
         mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         g = new GraphicPanel();
         r = new MainMenu(g, this);
@@ -111,8 +111,11 @@ public class Window {
                     setScene(new MainMenu(g, w));
                 }
             }
-            
-            @Override public void keyPressed(KeyEvent e) {}
+            @Override public void keyPressed(KeyEvent e) {
+                if(r instanceof TetrisRenderer){
+                    ((TetrisRenderer)r).onKey(e.getKeyCode());
+                }
+            }
             @Override public void keyReleased(KeyEvent e) {}
         });
     }
@@ -120,5 +123,6 @@ public class Window {
     void setScene(Renderer renderer){
         r = renderer;
         g.renderer = r;
+        r.resize();
     }
 }
