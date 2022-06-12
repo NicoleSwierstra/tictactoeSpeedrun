@@ -1,17 +1,24 @@
 package BasicLogic.Tetris;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import Graphics.Animation;
+import Graphics.AnimationInterface;
+
 public class tetrisBoard {
     public final int WIDTH = 10, HEIGHT = 20;
+    public int ppixel;
     
     public int[][] board;
     public List<Integer> next;
     public Tetrimino current;
     public int stored = 0;
+    public boolean canstore = true;
     boolean playing = true;
     public int level;
     public int lines;
@@ -26,8 +33,12 @@ public class tetrisBoard {
     }
 
     Tetrimino pushNext(){
+        canstore = true;
         Tetrimino t = new Tetrimino(tetrisInfo.baseTetriminos[next.remove(0)]);
         if(next.size() < 7) fillNext();
+
+        System.out.println("Stored: " + stored + "Next: " + next.get(0));
+
         return t;
     }
 
@@ -59,13 +70,34 @@ public class tetrisBoard {
     public void checkLines(){
         for(int y = 0; y < HEIGHT; y++){
             if(checkLine(y)){
-                for(int l = y; l < HEIGHT - 1; l++){
-                    for(int x = 0; x < WIDTH; x++){
-                        board[l][x] = board[l+1][x];
+                int startingline = y;
+                int number = 0;
+                while(checkLine(y++)) number++;
+                
+                int n = number;
+
+                System.out.println("start:" + startingline + " number:" + n);
+                Animation.AddAnimation((t, g)->{
+                    g.setColor(new Color(1.0f, 1.0f, 1.0f, Math.round((t * 2) % 1)));
+                    g.fillRect(0, (19 - startingline - (n - 1)) * ppixel, 10 * ppixel, ppixel * n);
+                }, (t, g) -> {
+                    for(int i = 0; i < n; i++){
+                        for(int l = startingline; l < HEIGHT - 1; l++){
+                            for(int x = 0; x < WIDTH; x++){
+                                board[l][x] = board[l+1][x];
+                            }
+                        }
                     }
-                }
-                lines++;
-                y--;
+                }, 0.2f);
+
+                if(n == 4) Animation.AddAnimation((t, g) -> {
+                    g.setColor(Color.getHSBColor(t, 1.0f, 0.5f));
+                    g.setFont(new Font("Comic Sans MS", Font.BOLD, ppixel));
+                    g.drawString("TETRIS!!!", ppixel * 4, ppixel * 10);
+                }, 1.0f);
+
+                lines += number;
+                break;
             }
         }
         level = lines/10;
@@ -103,6 +135,7 @@ public class tetrisBoard {
         for(int i = 0; i < 4; i++){
             if(points[i].y > 20) continue;
             if(oob(points[i].x, points[i].y)) {valid = false; break;}
+            if(points[i].y >= 20) continue;
             if(board[points[i].y][points[i].x] != 0) valid = false;
         }
         if(!valid){
@@ -112,10 +145,21 @@ public class tetrisBoard {
     }
 
     public void SlamCurrent(){
-        while(update());
+        while(update()){
+            pointi[] animpoints = current.getPoints();
+
+            Animation.AddAnimation((t, g) -> {
+                for(pointi p : animpoints){
+                    g.setColor(new Color(1.0f, 1.0f, 1.0f, t*t));
+                    g.fillRect(p.x * ppixel, (19-p.y) * ppixel, ppixel, ppixel);
+                }
+            }, 0.15f);
+        }
     }
 
     public void StoreCurrent(){
+        if(!canstore) return; 
+        canstore = false;
         int t = stored > 0 ? stored : pushNext().type;
         stored = current.type;
         current = new Tetrimino(tetrisInfo.baseTetriminos[t]);
@@ -129,7 +173,6 @@ public class tetrisBoard {
     }
 
     public void timingThread(){
-        System.out.println("SEXO");
         while(playing){
             update();
             try {

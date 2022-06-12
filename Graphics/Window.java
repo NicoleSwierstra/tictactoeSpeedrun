@@ -2,11 +2,8 @@ package Graphics;
 
 import javax.swing.*;
 
-import BasicLogic.TicTacToe.tttBoard;
 import Graphics.Renderers.*;
 import Graphics.Renderers.Renderer;
-import BasicLogic.Hexes.hexesBoard;
-import BasicLogic.Minesweeper.msBoard;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -36,6 +33,8 @@ public class Window {
             });
             setFocusTraversalKeysEnabled(false);
             setFocusable(true);
+
+            new Animation();
         }
 
         @Override
@@ -47,6 +46,7 @@ public class Window {
             Point o = this.getLocationOnScreen();
             
             renderer.Render(g, (int)(p.getX() - o.getX()), (int)(p.getY() - o.getY()));
+            Animation.Update(0.0166666f, g);
         }
 
         public void run() {

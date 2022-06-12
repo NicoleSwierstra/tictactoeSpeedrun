@@ -1,4 +1,3 @@
-import BasicLogic.Hexes.hexesGame;
 import Graphics.Window;
 
 public class Main {
